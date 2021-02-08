@@ -1,7 +1,10 @@
 package com.florindanciu.opherUpbackend.item.dto;
 
+import com.florindanciu.opherUpbackend.auth.model.AppUser;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Date;
 import java.util.UUID;
 
@@ -13,7 +16,7 @@ public class ItemDto {
     private String description;
     private String category;
     private Date postingDate;
-    private Long price;
+    private String price;
     private String location;
     private String contactPerson;
     private String email;

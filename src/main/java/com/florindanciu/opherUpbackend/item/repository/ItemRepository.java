@@ -11,4 +11,7 @@ import java.util.UUID;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, UUID> {
     List<Item> getItemsByCategories(Category category);
+    List<Item> getItemsByName(String name);
+    List<Item> getItemsByLocation(String location);
+    List<Item> getItemsByNameAndLocation(String name, String location);
 }

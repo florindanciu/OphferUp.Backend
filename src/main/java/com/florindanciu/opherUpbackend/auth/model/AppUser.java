@@ -1,8 +1,7 @@
 package com.florindanciu.opherUpbackend.auth.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.florindanciu.opherUpbackend.item.model.Item;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,6 +14,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
@@ -47,6 +48,9 @@ public class AppUser {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Item> items = new HashSet<>();
 
     public AppUser(@NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email, @NotBlank @Size(max = 120) String password) {
         this.username = username;

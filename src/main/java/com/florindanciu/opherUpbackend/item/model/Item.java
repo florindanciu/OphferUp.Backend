@@ -1,9 +1,7 @@
 package com.florindanciu.opherUpbackend.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.florindanciu.opherUpbackend.auth.model.AppUser;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -15,6 +13,7 @@ import java.util.UUID;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Item {
 
     @Id
@@ -23,7 +22,7 @@ public class Item {
 
     private String name;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
             name = "item_category",
             joinColumns = @JoinColumn(name = "item_id"),
@@ -34,10 +33,12 @@ public class Item {
     @CreationTimestamp
     private Date postingDate;
     private String description;
-    private Long price;
+    private String price;
     private String location;
     private String contactPerson;
     private String email;
     private String phoneNumber;
     private String image;
+    @ManyToOne
+    private AppUser user;
 }
