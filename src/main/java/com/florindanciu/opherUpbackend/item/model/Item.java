@@ -20,7 +20,7 @@ public class Item {
     @GeneratedValue
     private UUID id;
 
-    private String name;
+    private String itemName;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinTable(
@@ -36,7 +36,7 @@ public class Item {
     private String price;
     private String location;
     private String contactPerson;
-    private String email;
+    private String contactEmail;
     private String phoneNumber;
     private String image;
     @ManyToOne

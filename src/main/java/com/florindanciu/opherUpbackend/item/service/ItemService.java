@@ -1,5 +1,7 @@
 package com.florindanciu.opherUpbackend.item.service;
 
+import com.florindanciu.opherUpbackend.auth.dto.UserConverter;
+import com.florindanciu.opherUpbackend.auth.dto.UserDto;
 import com.florindanciu.opherUpbackend.auth.model.AppUser;
 import com.florindanciu.opherUpbackend.auth.repository.AppUserRepository;
 import com.florindanciu.opherUpbackend.item.dto.ItemConverter;
@@ -30,6 +32,9 @@ public class ItemService {
     @Autowired
     private ItemConverter converter;
 
+    @Autowired
+    private UserConverter userConverter;
+
     public List<ItemDto> getAllItems() {
         List<Item> items = itemRepository.findAll();
         return converter.modelToDto(items);
@@ -43,6 +48,17 @@ public class ItemService {
         return itemDtoList;
     }
 
+    public UserDto getUserByItemId(UUID itemId) {
+        Item item = itemRepository.getOne(itemId);
+        AppUser user = appUserRepository.getAppUserByItems(item);
+        return userConverter.modelToDto(user);
+    }
+
+    public List<ItemDto> getItemsByUserId(UUID userId) {
+        AppUser user = appUserRepository.getOne(userId);
+        return converter.modelToDto(itemRepository.getAllByUser(user));
+    }
+
     public ItemDto getItemById(UUID id) {
         Item item = itemRepository.findById(id).
                 orElseThrow(() -> new ItemNotFoundException(id));
@@ -50,7 +66,7 @@ public class ItemService {
     }
 
     public List<ItemDto> getItemsByName(String name) {
-        List<Item> items = itemRepository.getItemsByName(name);
+        List<Item> items = itemRepository.getItemsByItemName(name);
         return converter.modelToDto(items);
     }
 
@@ -60,7 +76,7 @@ public class ItemService {
     }
 
     public List<ItemDto> getItemsByNameAndLocation(String name, String location) {
-        List<Item> items = itemRepository.getItemsByNameAndLocation(name, location);
+        List<Item> items = itemRepository.getItemsByItemNameAndLocation(name, location);
         return converter.modelToDto(items);
     }
 

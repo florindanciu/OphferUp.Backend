@@ -1,5 +1,7 @@
 package com.florindanciu.opherUpbackend.item.controller;
 
+import com.florindanciu.opherUpbackend.auth.dto.UserDto;
+import com.florindanciu.opherUpbackend.auth.model.AppUser;
 import com.florindanciu.opherUpbackend.item.dto.ItemDto;
 import com.florindanciu.opherUpbackend.item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -15,8 +18,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1/items")
 public class ItemController {
 
+    private final ItemService itemService;
+
     @Autowired
-    private ItemService itemService;
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @GetMapping
     public List<ItemDto> getAllItems() {
@@ -28,17 +35,27 @@ public class ItemController {
         return itemService.getItemById(id);
     }
 
+    @GetMapping("/user/{userId}")
+    public List<ItemDto> getItemsByUserId(@PathVariable UUID userId) {
+        return itemService.getItemsByUserId(userId);
+    }
+
+    @GetMapping("/user/item/{itemId}")
+    public UserDto getUserByItemId(@PathVariable UUID itemId) {
+        return itemService.getUserByItemId(itemId);
+    }
+
     @GetMapping("/category/{id}")
     public List<ItemDto> getItemsByCategoryId(@PathVariable UUID id) {
         return itemService.getItemsByCategoryId(id);
     }
 
-    @GetMapping("/{itemName}")
+    @GetMapping("/name/{itemName}")
     public List<ItemDto> getItemsByName(@PathVariable String itemName) {
         return itemService.getItemsByName(itemName);
     }
 
-    @GetMapping("/{itemLocation}")
+    @GetMapping("/location/{itemLocation}")
     public List<ItemDto> getItemsByLocation(@PathVariable String itemLocation) {
         return itemService.getItemsByLocation(itemLocation);
     }
