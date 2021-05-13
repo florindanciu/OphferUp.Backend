@@ -13,8 +13,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1/categories")
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public List<CategoryDto> getAllCategories() {

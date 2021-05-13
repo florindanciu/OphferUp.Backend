@@ -13,11 +13,14 @@ import java.util.UUID;
 @Service
 public class CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final CategoryConverter converter;
 
     @Autowired
-    private CategoryConverter converter;
+    public CategoryService(CategoryRepository categoryRepository, CategoryConverter converter) {
+        this.categoryRepository = categoryRepository;
+        this.converter = converter;
+    }
 
     public List<CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();

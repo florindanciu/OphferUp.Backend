@@ -1,19 +1,18 @@
 package com.florindanciu.opherUpbackend.item.controller;
 
 import com.florindanciu.opherUpbackend.auth.dto.UserDto;
-import com.florindanciu.opherUpbackend.auth.model.AppUser;
 import com.florindanciu.opherUpbackend.item.dto.ItemDto;
 import com.florindanciu.opherUpbackend.item.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/items")
 public class ItemController {
@@ -65,20 +64,52 @@ public class ItemController {
         return itemService.getItemsByNameAndLocation(itemName, itemLocation);
     }
 
+    @PutMapping("/item/{itemId}")
+    public ResponseEntity<?> updateItem(@PathVariable UUID itemId, @RequestBody ItemDto itemDto) {
+        itemService.updateItem(itemId, itemDto);
+        return ResponseEntity.accepted().body("Offer successfully updated.");
+    }
+
     @PostMapping("/{userId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<?> addItem(@RequestBody ItemDto itemDto, @PathVariable UUID userId) {
-        if (itemService.addItem(itemDto, userId)) {
-            return ResponseEntity
-                    .accepted()
-                    .body("Saved successfully");
+    public Map<String, UUID> addItem(@RequestBody ItemDto itemDto, @PathVariable UUID userId) {
+        return itemService.addItem(itemDto, userId);
+    }
+
+    @PostMapping(
+            path = "/image/{itemId}/upload",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> uploadImage(
+            @PathVariable("itemId") UUID itemId,
+            @RequestPart(required = false) MultipartFile file1,
+            @RequestPart(required = false) MultipartFile file2,
+            @RequestPart(required = false) MultipartFile file3
+    ) {
+        List<MultipartFile> images = new ArrayList<>();
+        if (file1 != null) {
+            images.add(file1);
         }
+        if (file2 != null) {
+            images.add(file2);
+        }
+        if (file3 != null) {
+            images.add(file3);
+        }
+        itemService.uploadImage(itemId, images);
         return ResponseEntity
-                .badRequest()
-                .body("Something went wrong");
+                .accepted()
+                .body("Offer successfully");
+    }
+
+    @GetMapping("/image/{itemId}/{fileName}/download")
+    public byte[] downloadImage(@PathVariable("itemId") UUID itemId, @PathVariable("fileName") String fileName) {
+        return itemService.downloadImages(itemId, fileName);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> deleteItem(@PathVariable UUID id) {
         if (itemService.deleteItem(id)) {
             return ResponseEntity
@@ -89,4 +120,6 @@ public class ItemController {
                 .badRequest()
                 .body("Something went wrong");
     }
+
+
 }

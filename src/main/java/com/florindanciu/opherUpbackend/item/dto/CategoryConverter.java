@@ -11,8 +11,12 @@ import java.util.stream.Collectors;
 @Component
 public class CategoryConverter {
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    private ModelMapper modelMapper;
+    public CategoryConverter(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     public CategoryDto modelToDto(Category category) {
         return modelMapper.map(category, CategoryDto.class);

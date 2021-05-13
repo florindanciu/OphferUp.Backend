@@ -18,5 +18,4 @@ public class ItemDto {
     private String contactPerson;
     private String contactEmail;
     private String phoneNumber;
-    private String image;
 }

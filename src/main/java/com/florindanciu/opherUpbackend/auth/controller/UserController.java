@@ -1,25 +1,34 @@
 package com.florindanciu.opherUpbackend.auth.controller;
 
+import com.florindanciu.opherUpbackend.auth.dto.UserDto;
+import com.florindanciu.opherUpbackend.auth.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/routes")
-public class RoutesController {
+public class UserController {
+
+    private final UserService service;
+
+    @Autowired
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
     @GetMapping("/all")
     public String allAccess() {
         return "Public Content.";
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/{userId}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public String userAccess() {
-        return "AppUser Content.";
+    public UserDto getUserById(@PathVariable UUID userId) {
+        return service.getUserById(userId);
     }
 
     @GetMapping("/seller")

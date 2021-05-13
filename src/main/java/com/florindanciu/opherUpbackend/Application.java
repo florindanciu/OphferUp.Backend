@@ -17,28 +17,35 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @SpringBootApplication
+@EnableSwagger2
 public class Application {
 
-	private final AppUserRepository appUserRepository;
-	private final RoleRepository roleRepository;
-	private final CategoryRepository categoryRepository;
-	private final ItemRepository itemRepository;
-	private final PasswordEncoder encoder;
-
-	@Autowired
-	public Application(AppUserRepository appUserRepository, RoleRepository roleRepository, CategoryRepository categoryRepository, ItemRepository itemRepository, PasswordEncoder encoder) {
-		this.appUserRepository = appUserRepository;
-		this.roleRepository = roleRepository;
-		this.categoryRepository = categoryRepository;
-		this.itemRepository = itemRepository;
-		this.encoder = encoder;
-	}
+//	private final AppUserRepository appUserRepository;
+//	private final RoleRepository roleRepository;
+//	private final CategoryRepository categoryRepository;
+//	private final ItemRepository itemRepository;
+//	private final PasswordEncoder encoder;
+//
+//	@Autowired
+//	public Application(AppUserRepository appUserRepository, RoleRepository roleRepository, CategoryRepository categoryRepository, ItemRepository itemRepository, PasswordEncoder encoder) {
+//		this.appUserRepository = appUserRepository;
+//		this.roleRepository = roleRepository;
+//		this.categoryRepository = categoryRepository;
+//		this.itemRepository = itemRepository;
+//		this.encoder = encoder;
+//	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -47,6 +54,15 @@ public class Application {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
+	}
+
+	@Bean
+	public Docket api() {
+		return new Docket(DocumentationType.SWAGGER_2)
+				.select()
+				.apis(RequestHandlerSelectors.any())
+				.paths(PathSelectors.any())
+				.build();
 	}
 
 //	@Bean
@@ -78,7 +94,7 @@ public class Application {
 //					.build();
 //			appUserRepository.save(admin);
 //
-//
+
 //			Category categoryAuto = categoryRepository.findByEnumCategory(EnumCategory.Vehicles);
 //			Item item1 = Item.builder()
 //					.itemName("2020 Dodge Challenger R/T")
@@ -107,7 +123,6 @@ public class Application {
 //					.build();
 //
 //			itemRepository.saveAll(List.of(item1, item2));
-//
 //		};
 //	}
 }

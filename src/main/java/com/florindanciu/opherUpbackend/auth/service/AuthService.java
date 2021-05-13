@@ -27,20 +27,24 @@ import java.util.stream.Collectors;
 @Service
 public class AuthService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final AppUserRepository appUserRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JWTService jwtService;
 
     @Autowired
-    private AppUserRepository appUserRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JWTService jwtService;
+    public AuthService(AuthenticationManager authenticationManager,
+                       AppUserRepository appUserRepository,
+                       RoleRepository roleRepository,
+                       PasswordEncoder passwordEncoder,
+                       JWTService jwtService) {
+        this.authenticationManager = authenticationManager;
+        this.appUserRepository = appUserRepository;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+    }
 
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
 
